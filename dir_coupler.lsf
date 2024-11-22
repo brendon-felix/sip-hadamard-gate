@@ -1,0 +1,270 @@
+deleteall;
+
+width = 500e-9;
+thickness = 220e-9;
+couple_length = 6e-6;
+couple_dist = 1e-6;
+x_offset = couple_length / 2;
+y_offset = couple_dist / 2;
+s_curve_x_span = 4e-6;
+s_curve_y_span = 2e-6;
+port_length = 4e-6;
+total_length = couple_length + (s_curve_x_span + port_length) * 2;
+total_width = couple_dist + (s_curve_y_span + width) * 2;
+
+# SIO2 substrate
+addrect;
+set("name", "substrate");
+set("material", "SiO2 (Glass) - Palik");
+set("override mesh order from material database", 1);
+set("mesh order", 3);
+set("alpha", 0.5);
+set("x span", 40e-6);
+set("y span", 20e-6);
+set("z span", 2e-6);
+set("x", 0);
+set("y", 0);
+set("z", 0);
+
+# couple top waveguide
+addrect;
+set("name", "top_cpl");
+set("material", "Si (Silicon) - Palik");
+set("x span", couple_length);
+set("y span", width);
+set("z span", thickness);
+set("x", 0);
+set("y", y_offset);
+set("z", 0);
+
+# top left s-curve
+addwaveguide;
+set("name", "top_left_curve");
+set("base width",width);
+set("base height",thickness);
+set("base angle",90);
+p1 = [-x_offset, y_offset];
+p2 = [-x_offset - s_curve_x_span / 2, y_offset];
+p3 = [-x_offset - s_curve_x_span / 2, y_offset + s_curve_y_span];
+p4 = [-x_offset - s_curve_x_span, y_offset + s_curve_y_span];
+pole = [p1; p2; p3; p4];
+set("poles",pole);
+set("material","Si (Silicon) - Palik");
+
+# top left port
+addrect;
+set("name", "top_left_port");
+set("material", "Si (Silicon) - Palik");
+set("x span", port_length);
+set("y span", width);
+set("z span", thickness);
+set("x", -port_length / 2 - x_offset - s_curve_x_span);
+set("y", y_offset + s_curve_y_span);
+set("z", 0);
+
+# top right s-curve
+addwaveguide;
+set("name", "top_right_curve");
+set("base width",width);
+set("base height",thickness);
+set("base angle",90);
+p1 = [x_offset, y_offset];
+p2 = [x_offset + s_curve_x_span / 2, y_offset];
+p3 = [x_offset + s_curve_x_span / 2, y_offset + s_curve_y_span];
+p4 = [x_offset + s_curve_x_span, y_offset + s_curve_y_span];
+pole = [p1; p2; p3; p4];
+set("poles",pole);
+set("material","Si (Silicon) - Palik");
+
+# top right port
+addrect;
+set("name", "top_right_port");
+set("material", "Si (Silicon) - Palik");
+set("x span", port_length);
+set("y span", width);
+set("z span", thickness);
+set("x", port_length / 2 + x_offset + s_curve_x_span);
+set("y", y_offset + s_curve_y_span);
+set("z", 0);
+
+# couple bottom waveguide
+addrect;
+set("name", "bot_cpl");
+set("material", "Si (Silicon) - Palik");
+set("x span", couple_length);
+set("y span", width);
+set("z span", thickness);
+set("x", 0);
+set("y", -couple_dist / 2);
+set("z", 0);
+
+# bottom left s-curve
+addwaveguide;
+set("name", "bot_left_curve");
+set("base width",width);
+set("base height",thickness);
+set("base angle",90);
+p1 = [-x_offset, -y_offset];
+p2 = [-x_offset - s_curve_x_span / 2, -y_offset];
+p3 = [-x_offset - s_curve_x_span / 2, -y_offset - s_curve_y_span];
+p4 = [-x_offset - s_curve_x_span, -y_offset - s_curve_y_span];
+pole = [p1; p2; p3; p4];
+set("poles",pole);
+set("material","Si (Silicon) - Palik");
+
+# bottom left port
+addrect;
+set("name", "bot_left_port");
+set("material", "Si (Silicon) - Palik");
+set("x span", port_length);
+set("y span", width);
+set("z span", thickness);
+set("x", -port_length / 2 - x_offset - s_curve_x_span);
+set("y", -y_offset - s_curve_y_span);
+set("z", 0);
+
+# bottom right s-curve
+addwaveguide;
+set("name", "bot_right_curve");
+set("base width",width);
+set("base height",thickness);
+set("base angle",90);
+p1 = [x_offset, -y_offset];
+p2 = [x_offset + s_curve_x_span / 2, -y_offset];
+p3 = [x_offset + s_curve_x_span / 2, -y_offset - s_curve_y_span];
+p4 = [x_offset + s_curve_x_span, -y_offset - s_curve_y_span];
+pole = [p1; p2; p3; p4];
+set("poles",pole);
+set("material","Si (Silicon) - Palik");
+
+# bottom right port
+addrect;
+set("name", "bot_right_port");
+set("material", "Si (Silicon) - Palik");
+set("x span", port_length);
+set("y span", width);
+set("z span", thickness);
+set("x", port_length / 2 + x_offset + s_curve_x_span);
+set("y", -y_offset - s_curve_y_span);
+set("z", 0);
+
+#FDTD
+addvarfdtd;
+set("index", 1.44);
+set("x span", total_length + 2e-6);
+set("y span", total_width + 2e-6);
+set("z span", 2e-6);
+set("x", 0);
+set("y", 0);
+set("z", 0);
+
+##mesh
+#addmesh;
+#set("x", 0);
+#set("y", -center_gap/2);
+#set("z", 0);
+#set("x span", cpl_length + rds/2);
+#set("y span", center_gap*2);
+#set("z span", thickness);
+#set("override x mesh", true);
+#set("dx", meshsize(1));
+#set("override x mesh", true);
+#set("dy", meshsize(2));
+#set("override x mesh", true);
+#set("dz", meshsize(3));
+#
+
+src_mntr_factor = 4;
+
+# addmode;
+# set("injection axis","x");
+# set("x", -port_length / 2 - x_offset - s_curve_x_span + 1e-6);
+# set("y", y_offset + s_curve_y_span);
+# set("y span",in_wdth*src_mntr_factor);
+# set("z",0);
+# set("z span", thickness*src_mntr_factor);
+# set("center wavelength", 1550e-9);
+# set("wavelength span", 0);
+# set("mode selection", "fundamental TE mode");
+
+addmodesource;
+set("injection axis","x");
+set("x", -total_length/2 + 1e-6);
+set("y", y_offset + s_curve_y_span);
+set("y span", width*src_mntr_factor);
+#set("z",0);
+#set("z span", thickness*src_mntr_factor);
+set("center wavelength", 1550e-9);
+set("wavelength span", 0);
+set("mode selection", "fundamental mode");
+
+addpower;
+set("name","top_monitor");
+set("monitor type",5);
+set("x", total_length/2 - 1e-6);
+set("y", y_offset + s_curve_y_span);
+set("y span", width*src_mntr_factor);
+set("z",0);
+set("z span",thickness*src_mntr_factor);
+
+addpower;
+set("name","bot_monitor");
+set("monitor type",5);
+set("x", total_length/2 - 1e-6);
+set("y", -y_offset - s_curve_y_span);
+set("y span", width*src_mntr_factor);
+set("z",0);
+set("z span",thickness*src_mntr_factor);
+
+#addpower;
+#set("name","ring_monitor");
+#set("monitor type",6);
+#set("x",ring_x_offset + rds*0.66);
+#set("x span",rng_wdth*src_mntr_factor);
+#set("y",rds/4);
+#set("z",0);
+#set("z span",thickness*src_mntr_factor);
+#
+#gap_start = gap_range(1);
+#gap_end = gap_range(2);
+#step_size = 50e-9;
+#num_points = floor((gap_end - gap_start + step_size) / step_size);
+##num_points = 3;
+#
+#deletesweep("sweep_gap_dist_TE_cl0");
+#addsweep;
+#setsweep("sweep", "name", "sweep_gap_dist_TE_cl0");
+#setsweep("sweep_gap_dist_TE_cl0", "type", "Ranges");
+#setsweep("sweep_gap_dist_TE_cl0", "number of points", num_points);
+#
+#para = struct;
+#para.Name = "gap_dist";
+#para.Parameter = "::model::input_waveguide::y";
+#para.Type = "Length";
+#para.Start = -1*(gap_start + gap_diff);
+#para.Stop = -1*(gap_end + gap_diff);
+#para.Units = "meters";
+#
+#addsweepparameter("sweep_gap_dist_TE_cl0", para);
+#
+#result_1 = struct;
+#result_1.Name = "T_through";
+#result_1.Result = "::model::through_monitor::T";
+#
+#result_2 = struct;
+#result_2.Name = "T_ring";
+#result_2.Result = "::model::ring_monitor::T";
+#
+#addsweepresult("sweep_gap_dist_TE_cl0", result_1);
+#addsweepresult("sweep_gap_dist_TE_cl0", result_2);
+#
+#runsweep("sweep_gap_dist_TE_cl0");
+#
+#T_through = getsweepresult("sweep_gap_dist_TE_cl0", "T_through");
+#T_ring = getsweepresult("sweep_gap_dist_TE_cl0", "T_ring");
+#
+#plot((-T_through.gap_dist - gap_diff) * 1e9 , T_through.T, "Gap Width (nm)", "Coefficient (\kappa)", "Cross-Coupling vs Gap (TE)");
+#legend("TE, cpl_length=0um");
+#plot((-T_ring.gap_dist - gap_diff) * 1e9, T_ring.T, "Gap Width (nm)", "Coefficient (t)", "Through-Coupling vs Gap (TE)");
+#legend("TE, cpl_length=0um");
+#
